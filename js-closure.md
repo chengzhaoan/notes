@@ -25,3 +25,44 @@ function f1(){
 ```
 这个问题也有可能是浏览器的加载问题，目前不清楚，
 关于介绍变量的作用域跟其他编程语言差不多，没有什么区别.
+
+思考题
+1
+```
+var name = "The Window";
+　　var object = {
+　　　　name : "My Object",
+　　　　getNameFunc : function(){
+　　　　　　return function(){
+　　　　　　　　return this.name;
+　　　　　　};
+　　　　}
+　　};
+　　alert(object.getNameFunc()());
+```
+2
+```
+var name = "The Window";
+　　var object = {
+　　　　name : "My Object",
+　　　　getNameFunc : function(){
+　　　　　　var that = this;
+　　　　　　return function(){
+　　　　　　　　return that.name;
+　　　　　　};
+　　　　}
+　　};
+　　alert(object.getNameFunc()());
+```
+尝试解答代码段一：
+getNameFunc: function() {//假设函数名为Ａ
+return function()/*假设函数名为Ｂ*/ { return this.name; };
+}
+在函数里面构建函数的时候，闭包产生。
+在函数Ｂ内调用函数Ａ的this.name,由于函数Ａ没有name属性，所以就去找全局变量name，找到了，所以返回“The Window”，要是没有找到，则返回“undefined”。
+代码段二可以尝试将代码更改为：
+var _this = this;
+return function() { return _this.name +"__"+ this.name; };
+
+第一个this window
+第二个this 指的是 object？
